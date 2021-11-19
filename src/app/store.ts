@@ -1,10 +1,14 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-
+import { firebaseReducer } from 'react-redux-firebase';
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    firebase: firebaseReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+    }),
 });
 
 export type AppDispatch = typeof store.dispatch;
