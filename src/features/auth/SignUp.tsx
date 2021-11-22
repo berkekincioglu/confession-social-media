@@ -28,6 +28,7 @@ const SignUp = (props: Props) => {
   const displayErrors = () => {
     errors.map((err: ErrorsType, key) => <p key={key}>{err.message}</p>);
   };
+
   return (
     <div>
       <Grid
