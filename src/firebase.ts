@@ -1,7 +1,14 @@
 import firebase from 'firebase/compat/app';
-import 'firebase/auth';
-import 'firebase/database';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import 'firebase/compat/database';
+// Import the functions you need from the SDKs you need
 
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyB2GlvtaGq2mSnjRoQ3aKo4GNwDKHg1MyE',
   authDomain: 'confession-dfdf8.firebaseapp.com',
@@ -13,6 +20,6 @@ const firebaseConfig = {
   measurementId: 'G-MDCWY1P7QS',
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
 export default firebase;
