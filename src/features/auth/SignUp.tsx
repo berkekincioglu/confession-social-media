@@ -9,25 +9,73 @@ import {
   Icon,
   Message,
 } from 'semantic-ui-react';
+import { unwrapResult } from '@reduxjs/toolkit';
+
 import { ErrorsType } from '../types';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { registerUserAndUpdateProfile } from './authSlice';
 
-interface Props {}
-
-const SignUp = (props: Props) => {
+const SignUp = () => {
+  const dispatch = useAppDispatch();
   const [username, setUserName] = useState('');
   const [gender, setGender] = useState('male');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [email, setEmail] = useState('');
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<ErrorsType[]>([]);
+
+  const { loading, currentUser } = useAppSelector((state) => state.auth);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log({ username, gender, password, email, passwordConfirm, errors });
+
+    setErrors([]);
+
+    if (isFormValid()) {
+      dispatch(
+        registerUserAndUpdateProfile({ username, email, password, gender })
+      )
+        .then(unwrapResult)
+        .then((user) => {
+          console.log(user);
+        })
+        .catch((error) => {
+          setErrors((prevErrors) => [...prevErrors, error]);
+        });
+    }
   };
-  const displayErrors = () => {
+
+  const isFormEmpty = () =>
+    ![username, email, password, passwordConfirm, gender].every(Boolean);
+
+  const isFormValid = () => {
+    let error: any;
+
+    if (!isFormEmpty() && !passwordsNotMatch()) {
+      return true;
+    }
+
+    if (isFormEmpty()) {
+      error = {
+        code: 'empty_fields',
+        message: 'Form is empty',
+      };
+    } else if (passwordsNotMatch()) {
+      error = {
+        code: 'passwords_not_match',
+        message: 'Passwords do not match',
+      };
+    }
+
+    setErrors((prevErrors) => [...prevErrors, error]);
+    return false;
+  };
+
+
+  const passwordsNotMatch = () => password !== passwordConfirm;
+
+  const displayErrors = () =>
     errors.map((err: ErrorsType, key) => <p key={key}>{err.message}</p>);
-  };
 
   return (
     <div>
@@ -111,23 +159,23 @@ const SignUp = (props: Props) => {
                   name='radioGroup'
                   value='male'
                   checked={gender === 'male'}
-                  onChange={({ value }: any) => setGender(value)}
+                  onChange={(e, { value }: any) => setGender(value)}
                 />
                 <Form.Radio
                   label='Female'
                   name='radioGroup'
                   value='female'
                   checked={gender === 'female'}
-                  onChange={({ value }: any) => setGender(value)}
+                  onChange={(e, { value }: any) => setGender(value)}
                 />
               </Form.Group>
             </Segment>
             <Button
               color='orange'
               size='small'
+              loading={loading === 'pending'}
               onClick={(e) => handleSubmit(e)}
             >
-              {' '}
               Sign up
             </Button>
           </Form>
