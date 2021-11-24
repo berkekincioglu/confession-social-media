@@ -174,7 +174,6 @@ const SignUp = () => {
               loading={loading === 'pending'}
               onClick={(e) => handleSubmit(e)}
             >
-              {' '}
               Sign up
             </Button>
           </Form>
