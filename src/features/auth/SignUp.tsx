@@ -71,10 +71,12 @@ const SignUp = () => {
     return false;
   };
 
+
   const passwordsNotMatch = () => password !== passwordConfirm;
 
   const displayErrors = () =>
     errors.map((err: ErrorsType, key) => <p key={key}>{err.message}</p>);
+
   return (
     <div>
       <Grid
