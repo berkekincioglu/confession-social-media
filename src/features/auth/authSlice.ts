@@ -1,10 +1,29 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getFirebase } from 'react-redux-firebase';
 
-import { UserType } from '../types';
+import { RegisterUserType, LoginUserType } from '../types';
+
+export const loginUser = createAsyncThunk(
+  'auth/loginUserStatus',
+  async ({ email, password }: LoginUserType) => {
+    const response = await getFirebase()
+      .auth()
+      .signInWithEmailAndPassword(email, password);
+
+    return response.user;
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUserStatus',
+  async () => {
+    return await getFirebase().auth().signOut();
+  }
+);
+
 export const registerUserAndUpdateProfile = createAsyncThunk(
   'auth/registerUserStatus',
-  async ({ username, email, password, gender }: UserType) => {
+  async ({ username, email, password, gender }: RegisterUserType) => {
     const usersRef = getFirebase().database().ref('users');
 
     const [first, last] = username.split(' ');
@@ -51,6 +70,18 @@ export const authSlice = createSlice({
     },
     [registerUserAndUpdateProfile.rejected.type]: (state, action) => {
       state.loading = 'idle';
+    },
+    [loginUser.pending.type]: (state, action) => {
+      state.loading = 'pending';
+    },
+    [loginUser.fulfilled.type]: (state, action) => {
+      state.loading = 'idle';
+    },
+    [loginUser.rejected.type]: (state, action) => {
+      state.loading = 'idle';
+    },
+    [logoutUser.fulfilled.type]: (state, action) => {
+      state.currentUser = null;
     },
   },
 });
