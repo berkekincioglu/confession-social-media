@@ -10,22 +10,38 @@ import {
   Icon,
   Message,
 } from 'semantic-ui-react';
-import { ErrorsType } from '../types';
-interface Props {}
 
-const Login = (props: Props) => {
+import { loginUser } from './authSlice';
+import { ErrorsType } from '../types';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { unwrapResult } from '@reduxjs/toolkit';
+
+const Login = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<ErrorsType[]>([]);
 
-  const displayErrors = () => {
-    errors.map((err: ErrorsType, key) => <p key={key}>{err.message}</p>);
-  };
+  const dispatch = useAppDispatch();
+
+  const isFormValid = () => Boolean(email && password);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log({ password, email, errors });
+    setErrors([]);
+
+    if (isFormValid()) {
+      dispatch(loginUser({ email, password }))
+        .then(unwrapResult)
+        .then((user) => {
+          console.log(user);
+        })
+        .catch((error) => {
+          setErrors((prevErrors) => [...prevErrors, error]);
+        });
+    }
   };
+  const displayErrors = () =>
+    errors.map((err: ErrorsType, key) => <p key={key}>{err.message}</p>);
   return (
     <div>
       <Grid
@@ -75,7 +91,7 @@ const Login = (props: Props) => {
               onClick={(e) => handleSubmit(e)}
             >
               {' '}
-              Sign up
+              Login
             </Button>
           </Form>
           {errors.length > 0 && <Message error>{displayErrors()} </Message>}
