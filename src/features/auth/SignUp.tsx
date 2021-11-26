@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Grid,
   Segment,
@@ -17,6 +17,7 @@ import { registerUserAndUpdateProfile } from './authSlice';
 
 const SignUp = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [username, setUserName] = useState('');
   const [gender, setGender] = useState('male');
   const [password, setPassword] = useState('');
@@ -25,6 +26,12 @@ const SignUp = () => {
   const [errors, setErrors] = useState<ErrorsType[]>([]);
 
   const { loading, currentUser } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/');
+    }
+  }, [currentUser]);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
