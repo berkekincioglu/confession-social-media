@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   Grid,
@@ -11,7 +11,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 
-import { loginUser } from './authSlice';
+import { loginUser, logoutUser } from './authSlice';
 import { ErrorsType } from '../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -22,7 +22,13 @@ const Login = () => {
   const [errors, setErrors] = useState<ErrorsType[]>([]);
 
   const dispatch = useAppDispatch();
-
+  const { currentUser } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/');
+    }
+  }, [currentUser]);
   const isFormValid = () => Boolean(email && password);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {

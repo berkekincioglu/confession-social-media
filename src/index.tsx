@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import 'semantic-ui-css/semantic.min.css';
@@ -11,7 +11,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Login from './features/auth/Login';
 import SignUp from './features/auth/SignUp';
 import NotFound from './components/NotFound';
-
+import { setCurrentUser } from './features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
 const rrfProps = {
   firebase,
   config: {
@@ -22,15 +23,25 @@ const rrfProps = {
 };
 const Root = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { currentUser } = useAppSelector((state) => state.auth);
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(setCurrentUser(user));
+      } else {
+        navigate('/login');
+      }
+    });
+  }, []);
+
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<App />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<SignUp />} />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path='/' element={<App />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<SignUp />} />
+      <Route path='*' element={<NotFound />} />
+    </Routes>
   );
 };
 
@@ -40,7 +51,9 @@ ReactDOM.render(
   <>
     <Provider store={store}>
       <ReactReduxFirebaseProvider {...rrfProps}>
-        <Root />
+        <Router>
+          <Root />
+        </Router>
       </ReactReduxFirebaseProvider>
     </Provider>
   </>,

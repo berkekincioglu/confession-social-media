@@ -55,10 +55,12 @@ export const authSlice = createSlice({
   initialState: {
     currentUser: null,
     loading: 'idle',
+    isLoadingUser: true,
   },
   reducers: {
     setCurrentUser(state, action) {
       state.currentUser = action.payload;
+      state.isLoadingUser = false;
     },
   },
   extraReducers: {
