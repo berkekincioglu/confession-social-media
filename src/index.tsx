@@ -13,6 +13,8 @@ import SignUp from './features/auth/SignUp';
 import NotFound from './components/NotFound';
 import { setCurrentUser } from './features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
+
 const rrfProps = {
   firebase,
   config: {
@@ -37,7 +39,14 @@ const Root = () => {
 
   return (
     <Routes>
-      <Route path='/' element={<App />} />
+      <Route
+        path='/'
+        element={
+          <PrivateRoute>
+            <App />
+          </PrivateRoute>
+        }
+      />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<SignUp />} />
       <Route path='*' element={<NotFound />} />
