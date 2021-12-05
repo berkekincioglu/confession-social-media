@@ -36,7 +36,7 @@ const HeaderPanel = () => {
             icon='search'
             placeholder='Search confessions...'
             size='large'
-            style={{ width: '20em' }}
+            style={{ width: '20em', marginBottom: '-3px' }}
           />
         </Menu.Item>
         <Menu.Menu position='right'>
