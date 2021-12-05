@@ -10,6 +10,5 @@ export type RegisterUserType = {
 };
 export type LoginUserType = {
   password: string;
-
   email: string;
 };
