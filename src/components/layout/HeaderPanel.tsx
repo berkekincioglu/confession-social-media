@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Icon, Input, Menu, Image, Dropdown, Header } from 'semantic-ui-react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { logoutUser } from '../../features/auth/authSlice';
+import AddConfessionForm from '../../features/confession/AddConfessionForm';
 import logo from '../../images/logo.png';
 
 const HeaderPanel = () => {
@@ -12,12 +13,16 @@ const HeaderPanel = () => {
   const handleSignOut = () => {
     dispatch(logoutUser());
   };
+  const [open, setOpen] = useState(false);
 
   const trigger = (
     <span>
       <Image avatar src={currentUser?.photoURL} />
     </span>
   );
+
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
   return (
     <Fragment>
@@ -40,7 +45,7 @@ const HeaderPanel = () => {
           />
         </Menu.Item>
         <Menu.Menu position='right'>
-          <Menu.Item name='make_confession'>
+          <Menu.Item name='make_confession' onClick={handleOpen}>
             <Icon name='pencil' size='big' />
             Confess
           </Menu.Item>
@@ -60,6 +65,7 @@ const HeaderPanel = () => {
           </Menu.Item>
         </Menu.Menu>
       </Menu>
+      <AddConfessionForm open={open} handleClose={handleClose} />
     </Fragment>
   );
 };
