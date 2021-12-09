@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getFirebase } from 'react-redux-firebase';
 import { Button, Dropdown, Form, Message, Modal } from 'semantic-ui-react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { tagOptions } from '../../utils/Tags';
 type Props = {
   open: boolean;
   handleClose: () => void;
@@ -15,7 +16,7 @@ const AddConfessionForm = ({ open, handleClose }: Props) => {
   const makeConfession = () => {};
   return (
     <Modal open={open} onClose={handleClose}>
-      <Modal.Header>Hadi itiraf et!</Modal.Header>
+      <Modal.Header>Let's Confess!</Modal.Header>
       <Modal.Description>
         <p
           style={{
@@ -69,7 +70,7 @@ const AddConfessionForm = ({ open, handleClose }: Props) => {
             value={tags}
             label='Which is the most suitable for your confession?'
             labeled
-            //   options={tagOptions}
+            options={tagOptions}
             onChange={(e, { value }) => setTags(value)}
             placeholder='Which is the most suitable for your confession?'
           />
@@ -78,7 +79,9 @@ const AddConfessionForm = ({ open, handleClose }: Props) => {
       </Modal.Content>
 
       <Modal.Actions>
-        <Button primary>Publish</Button>
+        <Button primary onClick={() => makeConfession()}>
+          Publish
+        </Button>
       </Modal.Actions>
     </Modal>
   );
