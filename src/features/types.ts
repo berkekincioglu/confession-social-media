@@ -12,3 +12,10 @@ export type LoginUserType = {
   password: string;
   email: string;
 };
+
+export type CreateConfessionType = {
+  content: string;
+  tags: string;
+  shareAs: string;
+  profile?: string | any;
+};
