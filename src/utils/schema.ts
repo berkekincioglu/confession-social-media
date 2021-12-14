@@ -5,6 +5,8 @@ type Error = {
   message?: string | string[] | undefined;
 };
 export const confessionSchema = Joi.object().keys({
+  id: Joi.string(),
+
   content: Joi.string()
     .min(20)
     .max(1000)

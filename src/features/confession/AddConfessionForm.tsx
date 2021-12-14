@@ -1,19 +1,55 @@
+import { unwrapResult } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import { getFirebase } from 'react-redux-firebase';
 import { Button, Dropdown, Form, Message, Modal } from 'semantic-ui-react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { tagOptions } from '../../utils/Tags';
+import { createConfession } from './confessionSlice';
+
 type Props = {
   open: boolean;
   handleClose: () => void;
 };
+
 const AddConfessionForm = ({ open, handleClose }: Props) => {
+  const [status, setStatus] = useState('idle');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<any | []>([]);
   const [shareAs, setShareAs] = useState<any | string>(' ');
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<any>([]);
 
-  const makeConfession = () => {};
+  const dispatch = useAppDispatch();
+  const { currentUser } = useAppSelector((state) => state.auth);
+
+  const { profile }: any = useAppSelector((state) => state.firebase);
+
+  const makeConfession = () => {
+    if (canSave) {
+      setStatus('pending');
+      setErrors([]);
+      dispatch(createConfession({ content, tags, shareAs, profile }))
+        .then(unwrapResult)
+        .then((result) => {
+          setStatus('idle');
+          setContent('');
+          setTags([]);
+          setShareAs('user');
+          handleClose();
+        })
+        .catch((err) => {
+          setErrors((prevErrors: any) => [...prevErrors, err]);
+          setStatus('idle');
+        });
+    }
+  };
+  const canSave =
+    [content, tags, shareAs].every(Boolean) &&
+    tags.length >= 1 &&
+    status === 'idle';
+
+  const displayErrors = () =>
+    errors.map((error: any, key: any) => <p key={key}>{error.message}</p>);
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Modal.Header>Let's Confess!</Modal.Header>
@@ -75,11 +111,11 @@ const AddConfessionForm = ({ open, handleClose }: Props) => {
             placeholder='Which is the most suitable for your confession?'
           />
         </Form>
-        {/* {errors.length > 0 && <Message error>{displayErrors()}</Message>} */}
+        {errors.length > 0 && <Message error>{displayErrors()}</Message>}
       </Modal.Content>
 
       <Modal.Actions>
-        <Button primary onClick={() => makeConfession()}>
+        <Button primary disabled={!canSave} onClick={() => makeConfession()}>
           Publish
         </Button>
       </Modal.Actions>
