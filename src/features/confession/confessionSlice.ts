@@ -2,8 +2,31 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getFirebase } from 'react-redux-firebase';
 import { confessionSchema } from '../../utils/schema';
 import { ALL } from '../../utils/Tags';
+import { setCurrentUser } from '../auth/authSlice';
 import { CreateConfessionType } from '../types';
-import { RootState } from '../../app/store';
+
+export const fetchConfessions = createAsyncThunk(
+  'confessions/fetchConfessions',
+  async (_, {}) => {
+    const data: any = await getFirebase()
+      .database()
+      .ref('confessions')
+      .get()
+      .then((snapshot) => {
+        let confessions: any = [];
+        snapshot.forEach((childSnapshot) => {
+          confessions.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val(),
+          });
+        });
+
+        return confessions;
+      });
+    return data;
+  }
+);
+
 export const createConfession = createAsyncThunk(
   'confessions/createConfessionStatus',
   async (
@@ -65,9 +88,28 @@ export const confessionSlice = createSlice({
     [createConfession.fulfilled.type]: (state, action) => {
       state.confessions.concat(action.payload);
     },
+    [fetchConfessions.pending.type]: (state, action) => {
+      state.loading = 'pending';
+    },
+    [fetchConfessions.fulfilled.type]: (state, action) => {
+      state.loading = 'idle';
+      state.confessions = action.payload;
+    },
+    [fetchConfessions.rejected.type]: (state, action) => {
+      state.loading = 'idle';
+    },
   },
 });
 
 export const { setCurrentCategory } = confessionSlice.actions;
 
 export default confessionSlice.reducer;
+function as(
+  arg0: (
+    childSnapshot: import('@firebase/database-types').DataSnapshot
+  ) => void,
+  as: any,
+  any: any
+) {
+  throw new Error('Function not implemented.');
+}
