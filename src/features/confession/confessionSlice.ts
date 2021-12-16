@@ -28,7 +28,6 @@ export const likeConfession = createAsyncThunk(
                 ? update.numberOfDislikes
                 : update.numberOfDislikes - 1;
           }
-
           return update;
         });
 
