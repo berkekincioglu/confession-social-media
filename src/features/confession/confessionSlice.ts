@@ -2,8 +2,42 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getFirebase } from 'react-redux-firebase';
 import { confessionSchema } from '../../utils/schema';
 import { ALL } from '../../utils/Tags';
-
+import { RootState } from '../../app/store';
 import { CreateConfessionType } from '../types';
+
+export const likeConfession = createAsyncThunk(
+  'confessions/likeConfessionStatus',
+  async (confession: any, { getState, rejectWithValue }: any) => {
+    const { currentUser } = getState().auth;
+    const currentUserUid = currentUser.uid;
+
+    let userReaction = confession.feelings[currentUserUid];
+    userReaction = userReaction === null ? 0 : userReaction;
+    const userAlreadyLiked = userReaction === 1;
+
+    if (!userAlreadyLiked) {
+      const result = await getFirebase()
+        .database()
+        .ref(`confessions/${confession.id}`)
+        .transaction(function (update) {
+          if (update) {
+            update.feelings[currentUserUid] = 1;
+            update.numberOfLikes = update.numberOfLikes + 1;
+            update.numberOfDislikes =
+              userReaction === 0
+                ? update.numberOfDislikes
+                : update.numberOfDislikes - 1;
+          }
+
+          return update;
+        });
+
+      return { confessionId: confession.id, currentUserUid, userReaction };
+    } else {
+      return rejectWithValue('Already Liked');
+    }
+  }
+);
 
 export const fetchConfessions = createAsyncThunk(
   'confessions/fetchConfessions',

@@ -5,12 +5,15 @@ import maleAvatar from '../../images/male_avatar.png';
 import femaleAvatar from '../../images/female_avatar.png';
 import { Segment, Comment, Divider, Label, Icon } from 'semantic-ui-react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setCurrentCategory } from './confessionSlice';
+import { likeConfession, setCurrentCategory } from './confessionSlice';
 
 const Confession = ({ confession }: any) => {
   const dispatch = useAppDispatch();
   const { currentUser }: any = useAppSelector((state) => state.auth);
 
+  const handleLike = (confession: any) => {
+    dispatch(likeConfession(confession));
+  };
   const getUserAvatar = () => {
     const gender = confession.user.gender;
 
@@ -66,7 +69,7 @@ const Confession = ({ confession }: any) => {
             <Divider />
 
             <Comment.Actions>
-              <Comment.Action>
+              <Comment.Action onClick={() => handleLike(confession)}>
                 <Icon
                   name={
                     confession.feelings[currentUser.uid] === 1
