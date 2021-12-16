@@ -3,12 +3,13 @@ import { Icon, Input, Menu, Image, Dropdown, Header } from 'semantic-ui-react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { logoutUser } from '../../features/auth/authSlice';
 import AddConfessionForm from '../../features/confession/AddConfessionForm';
+import { setSearchTerm } from '../../features/confession/confessionSlice';
 import logo from '../../images/logo.png';
 
 const HeaderPanel = () => {
   const dispatch = useAppDispatch();
   const { currentUser }: any = useAppSelector((state) => state.auth);
-  console.log(currentUser);
+  const { searchTerm } = useAppSelector((state) => state.confessions);
 
   const handleSignOut = () => {
     dispatch(logoutUser());
@@ -42,6 +43,9 @@ const HeaderPanel = () => {
             placeholder='Search confessions...'
             size='large'
             style={{ width: '20em', marginBottom: '-3px' }}
+            onChange={(e) => {
+              dispatch(setSearchTerm(e.target.value));
+            }}
           />
         </Menu.Item>
         <Menu.Menu position='right'>

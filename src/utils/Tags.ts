@@ -1,5 +1,5 @@
-const NOT_ANONTMOUS = 'Not Anonymous';
-const ONLY_ANONTMOUS = 'Only Anonymous';
+const NOT_ANONYMOUS = 'Not Anonymous';
+const ONLY_ANONYMOUS = 'Only Anonymous';
 const MOST_APPROVED = 'Most Approved';
 const MOST_JUDGED = 'Most Judged';
 
@@ -74,8 +74,8 @@ const tagOptions = [
   },
 ];
 export {
-  NOT_ANONTMOUS,
-  ONLY_ANONTMOUS,
+  NOT_ANONYMOUS,
+  ONLY_ANONYMOUS,
   MOST_APPROVED,
   MOST_JUDGED,
   ALL,

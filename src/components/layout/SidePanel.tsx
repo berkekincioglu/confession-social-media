@@ -108,18 +108,18 @@ const SidePanel = () => {
         <Menu.Header>Special Categories</Menu.Header>
         <Menu.Menu>
           <Menu.Item
-            name={Tag.NOT_ANONTMOUS}
+            name={Tag.NOT_ANONYMOUS}
             as='a'
             icon='hashtag'
-            active={currentCategory === Tag.NOT_ANONTMOUS}
-            onClick={(e) => handleMenuItemClick(Tag.NOT_ANONTMOUS, e)}
+            active={currentCategory === Tag.NOT_ANONYMOUS}
+            onClick={(e) => handleMenuItemClick(Tag.NOT_ANONYMOUS, e)}
           />
           <Menu.Item
-            name={Tag.ONLY_ANONTMOUS}
+            name={Tag.ONLY_ANONYMOUS}
             as='a'
             icon='hashtag'
-            active={currentCategory === Tag.ONLY_ANONTMOUS}
-            onClick={(e) => handleMenuItemClick(Tag.ONLY_ANONTMOUS, e)}
+            active={currentCategory === Tag.ONLY_ANONYMOUS}
+            onClick={(e) => handleMenuItemClick(Tag.ONLY_ANONYMOUS, e)}
           />
           <Menu.Item
             name={Tag.MOST_APPROVED}

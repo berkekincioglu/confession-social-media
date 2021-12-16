@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getFirebase } from 'react-redux-firebase';
 import { confessionSchema } from '../../utils/schema';
 import { ALL } from '../../utils/Tags';
-import { setCurrentUser } from '../auth/authSlice';
+
 import { CreateConfessionType } from '../types';
 
 export const fetchConfessions = createAsyncThunk(
@@ -78,10 +78,14 @@ export const confessionSlice = createSlice({
     confessions: [],
     loading: 'idle',
     currentCategory: ALL,
+    searchTerm: '',
   },
   reducers: {
     setCurrentCategory: (state, action) => {
       state.currentCategory = action.payload;
+    },
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
     },
   },
   extraReducers: {
@@ -101,7 +105,7 @@ export const confessionSlice = createSlice({
   },
 });
 
-export const { setCurrentCategory } = confessionSlice.actions;
+export const { setCurrentCategory, setSearchTerm } = confessionSlice.actions;
 
 export default confessionSlice.reducer;
 function as(
